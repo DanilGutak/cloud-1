@@ -37,18 +37,23 @@ jobs:
           ssh-add ~/.ssh/id_ed25519
         
       - name: Validate Terraform Format
+        working-directory: terraform
         run: terraform fmt -check
 
       - name: Validate Terraform Config
+        working-directory: terraform
         run: terraform validate
 
       - name: Plan Infra Changes
+        working-directory: terraform
         run: terraform plan 
 
       - name: Apply Infra (only on push to main)
+        working-directory: terraform
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
       - name: Get VM IP from Terraform Output
+        working-directory: terraform
         id: tfoutput
         run: |
           echo "VM_IP=$(terraform output -raw vm_public_ip)" >> $GITHUB_ENV
