@@ -12,5 +12,4 @@ variable "admin_username" {
 
 variable "ssh_public_key" {
   description = "SSH public key for the VM"
-  default     = "~/.ssh/id_ed25519.pub"
 }
