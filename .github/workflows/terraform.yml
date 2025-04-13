@@ -28,7 +28,7 @@ jobs:
         with:
           terraform_version: 1.6.0
 
-      - name: Load SSH Key for Future Ansible
+      - name: Load SSH Key for VM
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/id_ed25519
