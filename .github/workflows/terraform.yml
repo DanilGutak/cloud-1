@@ -48,6 +48,11 @@ jobs:
         working-directory: terraform
         run: terraform validate
 
+      - name: Import existing resource group (if needed)
+        working-directory: terraform
+        run: |
+          terraform import azurerm_resource_group.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg" || true
+
       - name: Plan Infra Changes
         working-directory: terraform
         run: terraform plan 
