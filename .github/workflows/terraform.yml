@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - terraform/**
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -77,4 +80,13 @@ jobs:
           echo "VM_IP=$(terraform output -raw vm_public_ip)" >> $GITHUB_ENV
       - name: Add server to known_hosts
         run: ssh-keyscan $VM_IP >> ~/.ssh/known_hosts
+
+      - name: Save public IP to file
+        run: echo $VM_IP > vm_ip.txt
+
+      - name: Upload IP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vm-ip
+          path: vm_ip.txt
 
