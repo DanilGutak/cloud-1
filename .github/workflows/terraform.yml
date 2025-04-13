@@ -59,7 +59,9 @@ jobs:
           terraform import azurerm_managed_disk.wp_data "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Compute/disks/wp-data-disk" || true
           terraform import azurerm_network_interface.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/networkInterfaces/cloud1-nic" || true
           terraform import azurerm_linux_virtual_machine.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Compute/virtualMachines/cloud1-vm" || true
-          terraform import azurerm_network_interface.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/networkInterfaces/cloud1-nic" || true
+          terraform import azurerm_network_interface_security_group_association.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/networkInterfaces/cloud1-nic|/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/networkSecurityGroups/cloud1-nsg" || true
+          terraform import azurerm_virtual_machine_data_disk_attachment.wp_data_attach "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Compute/virtualMachines/cloud1-vm/dataDisks/wp-data-disk" || true
+
       - name: Plan Infra Changes
         working-directory: terraform
         run: terraform plan 
