@@ -35,10 +35,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
-
-      - name: Add server to known_hosts
-        run: ssh-keyscan ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
-
+        
       - name: Validate Terraform Format
         run: terraform fmt -check
 
@@ -51,3 +48,10 @@ jobs:
       - name: Apply Infra (only on push to main)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
+      - name: Get VM IP from Terraform Output
+        id: tfoutput
+        run: |
+          echo "VM_IP=$(terraform output -raw vm_public_ip)" >> $GITHUB_ENV
+      - name: Add server to known_hosts
+        run: ssh-keyscan $VM_IP >> ~/.ssh/known_hosts
+
