@@ -44,7 +44,8 @@ jobs:
           sudo apt-get install -y ansible
 
       - name: Run Ansible Playbook
+        working-directory: ansible
         run: |
-          ansible-playbook -i "$VM_IP," ansible/site.yml \
+          ansible-playbook -i "$VM_IP," ansible/playbook.yml \
             --private-key ~/.ssh/id_ed25519 \
             -u azureuser
