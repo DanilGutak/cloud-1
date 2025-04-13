@@ -25,7 +25,7 @@ resource "azurerm_public_ip" "main" {
   name                = "${var.prefix}-ip"
   location            = var.location
   resource_group_name = azurerm_resource_group.main.name
-  allocation_method   = "Static" 
+  allocation_method   = "Static"
   sku                 = "Standard"
 }
 
@@ -92,12 +92,12 @@ resource "azurerm_network_interface_security_group_association" "main" {
 
 
 resource "azurerm_linux_virtual_machine" "main" {
-  name                  = "${var.prefix}-vm"
-  location              = var.location
-  resource_group_name   = azurerm_resource_group.main.name
-  network_interface_ids = [azurerm_network_interface.main.id]
-  size                  = "Standard_B1s"
-  admin_username        = var.admin_username
+  name                            = "${var.prefix}-vm"
+  location                        = var.location
+  resource_group_name             = azurerm_resource_group.main.name
+  network_interface_ids           = [azurerm_network_interface.main.id]
+  size                            = "Standard_B1s"
+  admin_username                  = var.admin_username
   disable_password_authentication = true
 
   admin_ssh_key {
