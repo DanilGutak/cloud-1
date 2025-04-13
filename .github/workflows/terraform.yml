@@ -35,6 +35,9 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
+      - name: Init Terraform
+        working-directory: terraform
+        run: terraform init
         
       - name: Validate Terraform Format
         working-directory: terraform
