@@ -48,10 +48,14 @@ jobs:
         working-directory: terraform
         run: terraform validate
 
-      - name: Import existing resource group (if needed)
+      - name: Import existing Azure resources (if needed)
         working-directory: terraform
         run: |
           terraform import azurerm_resource_group.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg" || true
+          terraform import azurerm_virtual_network.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/virtualNetworks/cloud1-vnet" || true
+          terraform import azurerm_public_ip.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/publicIPAddresses/cloud1-ip" || true
+          terraform import azurerm_network_security_group.main "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Network/networkSecurityGroups/cloud1-nsg" || true
+          terraform import azurerm_managed_disk.wp_data "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/cloud1-rg/providers/Microsoft.Compute/disks/wp-data-disk" || true
 
       - name: Plan Infra Changes
         working-directory: terraform
