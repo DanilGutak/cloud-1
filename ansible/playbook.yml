@@ -1,5 +1,9 @@
 - name: Configure web server
   hosts: web
   become: true
+  vars_files:
+    - vault.yml
   roles:
     - docker
+    - compose
+    - nginx

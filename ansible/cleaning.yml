@@ -1,0 +1,31 @@
+- name: Clean up web server
+  hosts: web
+  become: true
+  tasks:
+  - name: Stop and remove Docker containers
+    command: docker compose down
+  - name: Remove Docker volumes
+    docker_volume:
+      name: "{{ item }}"
+      state: absent
+    loop:
+      - azureuser-wordpress_db_data
+      - azureuser-wordpress_wordpress_data
+    ignore_errors: true
+  - name: Remove Docker network
+    docker_network:
+      name: azureuser-wordpress_default
+      state: absent
+    ignore_errors: true
+  - name: Remove nginx 
+    apt:
+      name: nginx
+      state: absent
+    ignore_errors: true
+  - name: Remove certbot
+    apt:
+      name: certbot
+      state: absent
+    ignore_errors: true
+
+  

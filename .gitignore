@@ -11,3 +11,5 @@
 *.tfstate.backup.*
 *.tfstate.old
 *.tfstate.old.*
+vault_pass.txt
+ansible/vault copy.yml

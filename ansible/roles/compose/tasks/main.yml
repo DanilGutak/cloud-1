@@ -1,0 +1,54 @@
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: /home/{{ ansible_user }}/docker-compose.yml
+    mode: '0644'
+
+- name: Create /mnt/wp
+  file:
+    path: /mnt/wp
+    state: directory
+    owner: 1000
+    group: 1000
+    mode: '0755'
+  become: true
+
+- name: Create /mnt/db
+  file:
+    path: /mnt/db
+    state: directory
+    owner: 1000
+    group: 1000
+    mode: '0755'
+  become: true
+
+- name: Start Docker containers
+  command: docker compose up -d
+  register: result
+  until: result is not failed
+  retries: 5
+  delay: 10
+
+- name: Stop Nginx temporarily (if running)
+  systemd:
+    name: nginx
+    state: stopped
+  become: true
+
+- name: Wait for WordPress to be ready
+  command: sleep 10
+
+- name: Install wp-cli inside wordpress container
+  command: >
+    docker exec azureuser-wordpress-1 sh -c "
+      curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &&
+      chmod +x wp-cli.phar &&
+      mv wp-cli.phar /usr/local/bin/wp"
+
+- name: setup with wp-cli
+  command: docker exec -it azureuser-wordpress-1 
+    wp core install --allow-root --url={{ wp_url }} --title={{ wp_title }} 
+    --admin_user={{ wp_admin_user }} --admin_password={{ wp_admin_password }} 
+    --admin_email={{ wp_admin_email }}
+  args: 
+    chdir: /home/{{ ansible_user }}
