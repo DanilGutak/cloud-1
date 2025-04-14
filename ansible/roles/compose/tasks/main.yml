@@ -29,12 +29,6 @@
   retries: 5
   delay: 10
 
-- name: Stop Nginx temporarily (if running)
-  systemd:
-    name: nginx
-    state: stopped
-  become: true
-
 - name: Wait for WordPress to be ready
   command: sleep 10
 
