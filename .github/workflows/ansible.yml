@@ -1,7 +1,10 @@
 name: Ansible Deploy
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Terraform Azure Deploy"]
+    types:
+      - completed
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -1,1 +1,0 @@
-ansible-playbook playbook.yml -i inventory.ini --vault-password-file ../vault_pass.txt
