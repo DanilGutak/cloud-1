@@ -21,11 +21,25 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: vm-ip
+      - name: Try to read IP from artifact
+        id: read_artifact
+        continue-on-error: true
+        run: |
+          if [ -f vm_ip.txt ]; then
+            echo "VM_IP=$(cat vm_ip.txt)" >> $GITHUB_ENV
+          else
+            echo "IP artifact not found"
+          fi
 
+      - name: Fallback to secret if artifact missing
+        if: steps.read_artifact.outcome != 'success'
+        run: |
+          echo "VM_IP=${{ secrets.VM_IP }}" >> $GITHUB_ENV
+      - name: Write ip into inventory
+        run: |
+          echo "[web]" > ansible/inventory.ini
+          echo "$VM_IP ansible_user=azureuser" >> ansible/inventory.ini
+      
       - name: Read IP into ENV
         run: echo "VM_IP=$(cat vm_ip.txt)" >> $GITHUB_ENV
 
