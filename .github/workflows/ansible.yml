@@ -21,20 +21,14 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
 
-      - name: Try to read IP from artifact
-        id: read_artifact
-        continue-on-error: true
-        run: |
-          if [ -f vm_ip.txt ]; then
-            echo "VM_IP=$(cat vm_ip.txt)" >> $GITHUB_ENV
-          else
-            echo "IP artifact not found"
-          fi
+      - name: Download VM IP artifact from Terraform workflow
+        uses: actions/download-artifact@v4
+        with:
+          name: vm-ip
+          github-token: ${{ secrets.GH_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          repository: ${{ github.repository }}
 
-      - name: Fallback to secret if artifact missing
-        if: steps.read_artifact.outcome != 'success'
-        run: |
-          echo "VM_IP=${{ secrets.VM_IP }}" >> $GITHUB_ENV
       - name: Write ip into inventory
         run: |
           echo "[web]" > ansible/inventory.ini
