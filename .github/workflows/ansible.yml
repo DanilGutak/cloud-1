@@ -41,4 +41,4 @@ jobs:
         working-directory: ansible
         run: |
           ansible-playbook -i inventory.ini playbook.yml \
-            --private-key ~/.ssh/id_ed25519 -vault-password-file vault_pass.txt 
+            --private-key ~/.ssh/id_ed25519 --vault-password-file vault_pass.txt 
