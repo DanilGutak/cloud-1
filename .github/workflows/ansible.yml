@@ -37,7 +37,6 @@ jobs:
         run: |
           echo "$VAULT_SECRET" > ansible/vault_pass.txt
           chmod 600 ansible/vault_pass.txt
-        run:
       - name: Run Ansible Playbook
         working-directory: ansible
         run: |
