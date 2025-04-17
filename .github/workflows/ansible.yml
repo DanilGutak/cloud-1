@@ -36,6 +36,6 @@ jobs:
       - name: Run Ansible Playbook
         working-directory: ansible
         run: |
-          ansible-playbook -i "$VM_IP," ansible/playbook.yml \
+          ansible-playbook -i inventory.ini playbook.yml \
             --private-key ~/.ssh/id_ed25519 \
             -u azureuser
