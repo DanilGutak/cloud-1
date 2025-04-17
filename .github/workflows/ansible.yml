@@ -37,9 +37,8 @@ jobs:
         run: |
           echo "$VAULT_SECRET" > ansible/vault_pass.txt
           chmod 600 ansible/vault_pass.txt
-        run:
       - name: Run Ansible Playbook
         working-directory: ansible
         run: |
           ansible-playbook -i inventory.ini playbook.yml \
-            --private-key ~/.ssh/id_ed25519 -vault-password-file vault_pass.txt 
+            --private-key ~/.ssh/id_ed25519 --vault-password-file vault_pass.txt 
