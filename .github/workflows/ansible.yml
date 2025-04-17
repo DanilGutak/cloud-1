@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 env:
   VM_IP: ${{ secrets.VM_IP }}
+  VAULT_SECRET: ${{ secrets.VAULT_SECRET }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -37,5 +38,4 @@ jobs:
         working-directory: ansible
         run: |
           ansible-playbook -i inventory.ini playbook.yml \
-            --private-key ~/.ssh/id_ed25519 \
-            -u azureuser
+            --private-key ~/.ssh/id_ed25519 -vault-password $VAULT_SECRET \
