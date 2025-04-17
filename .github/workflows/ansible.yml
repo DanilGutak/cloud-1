@@ -1,10 +1,9 @@
 name: Ansible Deploy
 
 on:
-  workflow_run:
-    workflows: ["Terraform Azure Deploy"]
-    types:
-      - completed
+  workflow_dispatch:
+env:
+  VM_IP: ${{ secrets.VM_IP }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,21 +20,10 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_ed25519
 
-      - name: Download VM IP artifact from Terraform workflow
-        uses: actions/download-artifact@v4
-        with:
-          name: vm-ip
-          github-token: ${{ secrets.GH_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
-          repository: ${{ github.repository }}
-
       - name: Write ip into inventory
         run: |
           echo "[web]" > ansible/inventory.ini
           echo "$VM_IP ansible_user=azureuser" >> ansible/inventory.ini
-      
-      - name: Read IP into ENV
-        run: echo "VM_IP=$(cat vm_ip.txt)" >> $GITHUB_ENV
 
       - name: Add server to known_hosts
         run: ssh-keyscan -H "$VM_IP" >> ~/.ssh/known_hosts
